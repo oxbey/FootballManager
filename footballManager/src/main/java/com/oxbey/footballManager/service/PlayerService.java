@@ -2,6 +2,7 @@ package com.oxbey.footballManager.service;
 
 import com.oxbey.footballManager.entity.ClubEntity;
 import com.oxbey.footballManager.exception.ClubNotFoundException;
+import com.oxbey.footballManager.exception.NotEnoughBudgetException;
 import com.oxbey.footballManager.exception.PlayerNotFoundException;
 import com.oxbey.footballManager.entity.PlayerEntity;
 import com.oxbey.footballManager.model.Player;
@@ -38,8 +39,11 @@ public class PlayerService {
         ClubEntity newClub = clubRepository.findById(newClubId)
                 .orElseThrow(()-> new ClubNotFoundException("Club with id" + newClubId + " not found"));
         Integer transferValueWithClubCommission = player.getTransferPrice() * (1 + previousClub.getCommission()/100);
-        previousClub.setBudget(transferValueWithClubCommission + previousClub.getBudget());
-        newClub.setBudget(newClub.getBudget() - transferValueWithClubCommission);
+        if ((newClub.getBudget() - transferValueWithClubCommission) > 0) {
+            previousClub.setBudget(transferValueWithClubCommission + previousClub.getBudget());
+            newClub.setBudget(newClub.getBudget() - transferValueWithClubCommission);
+        } else throw new NotEnoughBudgetException("Transfer value with " + previousClub.getName() +
+                " commission bigger than budget of " + newClub.getName());
         player.setClub(newClub);
         return playerRepository.save(player);
     }
@@ -51,8 +55,13 @@ public class PlayerService {
         return playerRepository.save(playerEntity);
     }
 
-    public PlayerEntity updatePlayer(PlayerEntity playerEntity){
-        return playerRepository.save(playerEntity);
+    public PlayerEntity updatePlayer(Long id, PlayerEntity playerEntity){
+        PlayerEntity player = playerRepository.findById(id).get();
+        player.setFirstName(playerEntity.getFirstName());
+        player.setLastName(playerEntity.getLastName());
+        player.setAge(playerEntity.getAge());
+        player.setStartCareer(playerEntity.getStartCareer());
+        return playerRepository.save(player);
     }
 
     public List<PlayerEntity> findAllPlayers(){

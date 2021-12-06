@@ -24,8 +24,8 @@ public class ClubController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<ClubEntity> updateClub(@RequestBody ClubEntity clubEntity){
-        ClubEntity club = clubService.updateClub(clubEntity);
+    public ResponseEntity<ClubEntity> updateClub(@RequestParam Long id, @RequestBody ClubEntity clubEntity){
+        ClubEntity club = clubService.updateClub(id, clubEntity);
         return new ResponseEntity<>(club, HttpStatus.OK);
     }
 

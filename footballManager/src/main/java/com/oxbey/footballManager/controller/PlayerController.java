@@ -24,10 +24,12 @@ public class PlayerController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<PlayerEntity> updatePlayer(@RequestBody PlayerEntity playerEntity){
-        PlayerEntity player = playerService.updatePlayer(playerEntity);
-        return new ResponseEntity<>(player,HttpStatus.OK);
+    public ResponseEntity<PlayerEntity> updatePlayer(@RequestParam Long id,
+                                                     @RequestBody PlayerEntity playerEntity) {
+        PlayerEntity player = playerService.updatePlayer(id, playerEntity);
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
+
     @GetMapping("/all")
     public ResponseEntity<List<PlayerEntity>> getAll() {
         List<PlayerEntity> playerEntityList = playerService.findAllPlayers();
@@ -35,7 +37,7 @@ public class PlayerController {
     }
 
     @GetMapping("/one")
-    public ResponseEntity<PlayerEntity> getOneById(Long id){
+    public ResponseEntity<PlayerEntity> getOneById(Long id) {
         PlayerEntity player = playerService.findById(id);
         return new ResponseEntity<>(player, HttpStatus.OK);
     }
@@ -48,8 +50,8 @@ public class PlayerController {
 
     @PostMapping("/transfer")
     public ResponseEntity<PlayerEntity> transferOperation(@RequestParam Long playerId,
-                                                          @RequestParam Long newClubId){
-        PlayerEntity player = playerService.transferOperation(playerId,newClubId);
-        return new ResponseEntity<>(player,HttpStatus.OK);
+                                                          @RequestParam Long newClubId) {
+        PlayerEntity player = playerService.transferOperation(playerId, newClubId);
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 }

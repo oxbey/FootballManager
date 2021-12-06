@@ -17,8 +17,14 @@ public class ClubService {
         return clubRepository.save(clubEntity);
     }
 
-    public ClubEntity updateClub(ClubEntity clubEntity){
-        return clubRepository.save(clubEntity);
+    public ClubEntity updateClub(Long id, ClubEntity clubEntity){
+        ClubEntity club = clubRepository.findById(id).get();
+        club.setName(clubEntity.getName());
+        club.setCity(clubEntity.getCity());
+        club.setCountry(clubEntity.getCountry());
+        club.setBudget(clubEntity.getBudget());
+        club.setCommission(clubEntity.getCommission());
+        return clubRepository.save(club);
     }
 
     public List<ClubEntity> findAll(){
