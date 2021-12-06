@@ -1,6 +1,7 @@
 package com.oxbey.footballManager.controller;
 
 import com.oxbey.footballManager.entity.ClubEntity;
+import com.oxbey.footballManager.model.Club;
 import com.oxbey.footballManager.service.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,27 @@ public class ClubController {
         return new ResponseEntity<>(club, HttpStatus.CREATED);
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<ClubEntity> updateClub(@RequestBody ClubEntity clubEntity){
+        ClubEntity club = clubService.updateClub(clubEntity);
+        return new ResponseEntity<>(club, HttpStatus.OK);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<ClubEntity>> getAll(){
         List<ClubEntity> clubEntityList = clubService.findAll();
         return new ResponseEntity<>(clubEntityList,HttpStatus.OK);
+    }
+
+    @GetMapping("/one")
+    public ResponseEntity<ClubEntity> getOne(Long id){
+        ClubEntity club = clubService.findOnById(id);
+        return new ResponseEntity<>(club, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteClubId(@PathVariable Long id){
+        clubService.deleteClubById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

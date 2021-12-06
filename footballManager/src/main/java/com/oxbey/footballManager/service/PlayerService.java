@@ -1,7 +1,10 @@
 package com.oxbey.footballManager.service;
 
-import com.oxbey.footballManager.PlayerNotFoundException;
+import com.oxbey.footballManager.entity.ClubEntity;
+import com.oxbey.footballManager.exception.PlayerNotFoundException;
 import com.oxbey.footballManager.entity.PlayerEntity;
+import com.oxbey.footballManager.model.Player;
+import com.oxbey.footballManager.repository.ClubRepository;
 import com.oxbey.footballManager.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,8 @@ public class PlayerService {
 
     @Autowired
     PlayerRepository playerRepository;
+    @Autowired
+    ClubRepository clubRepository;
 
     private Integer transferValue (PlayerEntity playerEntity){
         LocalDate now = LocalDate.now();
@@ -25,7 +30,9 @@ public class PlayerService {
             return (y * 12 + m) * 100000/playerEntity.getAge();
     }
 
-    public PlayerEntity addPlayer (PlayerEntity playerEntity){
+    public PlayerEntity addPlayer (PlayerEntity playerEntity, Long clubId){
+        ClubEntity club = clubRepository.findById(clubId).get();
+        playerEntity.setClub(club);
         playerEntity.setTransferPrice(transferValue(playerEntity));
         return playerRepository.save(playerEntity);
     }
@@ -43,26 +50,7 @@ public class PlayerService {
                 .orElseThrow(()-> new PlayerNotFoundException("Player with id" + id + " exists"));
     }
 
-    public PlayerEntity findByFirstName(String firstName){
-        return playerRepository.findPlayerEntityByFirstName(firstName)
-                .orElseThrow(()-> new PlayerNotFoundException("Player with first name" + firstName + " exists"));
-    }
-
-    public PlayerEntity findBySecondName(String lastName){
-        return playerRepository.findPlayerEntityByLastName(lastName)
-                .orElseThrow(()-> new PlayerNotFoundException("Player with last name" + lastName + " exists"));
-    }
-
     public void deletePlayerById(Long id){
         playerRepository.deleteById(id);
     }
-
-    public void deletePlayerByFirstName(String firstName){
-        playerRepository.deletePlayerEntityByFirstName(firstName);
-    }
-
-    public void deletePlayerBySecondName(String lastName){
-        playerRepository.deletePlayerEntityByLastName(lastName);
-    }
-
 }
