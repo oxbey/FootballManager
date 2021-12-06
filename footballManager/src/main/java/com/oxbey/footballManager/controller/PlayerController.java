@@ -23,10 +23,21 @@ public class PlayerController {
         return new ResponseEntity<>(player, HttpStatus.CREATED);
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<PlayerEntity> updatePlayer(@RequestBody PlayerEntity playerEntity){
+        PlayerEntity player = playerService.updatePlayer(playerEntity);
+        return new ResponseEntity<>(player,HttpStatus.OK);
+    }
     @GetMapping("/all")
     public ResponseEntity<List<PlayerEntity>> getAll() {
         List<PlayerEntity> playerEntityList = playerService.findAllPlayers();
         return new ResponseEntity<>(playerEntityList, HttpStatus.OK);
+    }
+
+    @GetMapping("/one")
+    public ResponseEntity<PlayerEntity> getOneById(Long id){
+        PlayerEntity player = playerService.findById(id);
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -35,15 +46,10 @@ public class PlayerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<PlayerEntity> updatePlayer(@RequestBody PlayerEntity playerEntity){
-        PlayerEntity player = playerService.updatePlayer(playerEntity);
+    @PostMapping("/transfer")
+    public ResponseEntity<PlayerEntity> transferOperation(@RequestParam Long playerId,
+                                                          @RequestParam Long newClubId){
+        PlayerEntity player = playerService.transferOperation(playerId,newClubId);
         return new ResponseEntity<>(player,HttpStatus.OK);
-    }
-
-    @GetMapping("/one")
-    public ResponseEntity<PlayerEntity> getOneById(Long id){
-        PlayerEntity player = playerService.findById(id);
-        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 }
