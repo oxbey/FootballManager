@@ -16,9 +16,9 @@ public class ClubDbToFill implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         List<ClubEntity> clubEntityList = new ArrayList<>(){{
-            add(new ClubEntity("Dynamo", "Kyiv", "Ukraine", 1145654, 9));
-            add(new ClubEntity("Shakhtar", "Donetsk", "Ukraine", 2345654, 10));
-            add(new ClubEntity("Real", "Madrid", "Spain", 10145654, 15));
+            add(new ClubEntity("Dynamo", "Kyiv", "Ukraine", 1145654, 4));
+            add(new ClubEntity("Shakhtar", "Donetsk", "Ukraine", 2345654, 6));
+            add(new ClubEntity("Real", "Madrid", "Spain", 10145654, 10));
         }};
         clubRepository.saveAll(clubEntityList);
     }

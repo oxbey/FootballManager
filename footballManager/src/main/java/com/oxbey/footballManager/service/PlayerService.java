@@ -1,11 +1,10 @@
 package com.oxbey.footballManager.service;
 
 import com.oxbey.footballManager.entity.ClubEntity;
+import com.oxbey.footballManager.entity.PlayerEntity;
 import com.oxbey.footballManager.exception.ClubNotFoundException;
 import com.oxbey.footballManager.exception.NotEnoughBudgetException;
 import com.oxbey.footballManager.exception.PlayerNotFoundException;
-import com.oxbey.footballManager.entity.PlayerEntity;
-import com.oxbey.footballManager.model.Player;
 import com.oxbey.footballManager.repository.ClubRepository;
 import com.oxbey.footballManager.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class PlayerService {

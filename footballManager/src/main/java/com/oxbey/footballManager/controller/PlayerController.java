@@ -1,7 +1,6 @@
 package com.oxbey.footballManager.controller;
 
 import com.oxbey.footballManager.entity.PlayerEntity;
-import com.oxbey.footballManager.model.Player;
 import com.oxbey.footballManager.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,6 @@
 package com.oxbey.footballManager.controller;
 
 import com.oxbey.footballManager.entity.ClubEntity;
-import com.oxbey.footballManager.model.Club;
 import com.oxbey.footballManager.service.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +35,8 @@ public class ClubController {
     }
 
     @GetMapping("/one")
-    public ResponseEntity<ClubEntity> getOne(Long id){
-        ClubEntity club = clubService.findOnById(id);
+    public ResponseEntity<ClubEntity> getOne(@RequestParam Long id){
+        ClubEntity club = clubService.findById(id);
         return new ResponseEntity<>(club, HttpStatus.OK);
     }
 

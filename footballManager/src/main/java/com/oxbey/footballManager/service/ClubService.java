@@ -1,7 +1,6 @@
 package com.oxbey.footballManager.service;
 
 import com.oxbey.footballManager.entity.ClubEntity;
-import com.oxbey.footballManager.model.Club;
 import com.oxbey.footballManager.repository.ClubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +30,8 @@ public class ClubService {
         return clubRepository.findAll();
     }
 
-    public ClubEntity findOnById(Long id){
-        return clubRepository.getById(id);
+    public ClubEntity findById(Long id){
+        return clubRepository.findById(id).get();
     }
 
     public void deleteClubById(Long id){

@@ -1,6 +1,5 @@
 package com.oxbey.footballManager.model;
 
-import com.oxbey.footballManager.entity.ClubEntity;
 import com.oxbey.footballManager.entity.PlayerEntity;
 import lombok.Data;
 
