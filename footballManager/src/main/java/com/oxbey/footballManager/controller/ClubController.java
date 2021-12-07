@@ -34,8 +34,8 @@ public class ClubController {
         return new ResponseEntity<>(clubEntityList,HttpStatus.OK);
     }
 
-    @GetMapping("/one")
-    public ResponseEntity<ClubEntity> getOne(@RequestParam Long id){
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ClubEntity> getOne(@PathVariable Long id){
         ClubEntity club = clubService.findById(id);
         return new ResponseEntity<>(club, HttpStatus.OK);
     }
