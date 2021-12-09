@@ -40,7 +40,7 @@ public class ClubController {
         return new ResponseEntity<>(club, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteClubId(@PathVariable Long id){
         clubService.deleteClubById(id);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -35,13 +35,13 @@ public class PlayerController {
         return new ResponseEntity<>(playerEntityList, HttpStatus.OK);
     }
 
-    @GetMapping("/one")
-    public ResponseEntity<PlayerEntity> getOneById(Long id) {
+    @GetMapping("/get/{id}")
+    public ResponseEntity<PlayerEntity> getOneById(@PathVariable Long id) {
         PlayerEntity player = playerService.findById(id);
         return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteByPlayerId(@PathVariable Long id) {
         playerService.deletePlayerById(id);
         return new ResponseEntity<>(HttpStatus.OK);
