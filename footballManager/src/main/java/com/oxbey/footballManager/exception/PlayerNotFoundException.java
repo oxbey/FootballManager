@@ -1,4 +1,4 @@
-package com.oxbey.footballManager;
+package com.oxbey.footballManager.exception;
 
 public class PlayerNotFoundException extends RuntimeException{
     public PlayerNotFoundException(String message) {

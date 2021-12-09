@@ -9,16 +9,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
-//@RequestMapping("/players")
+@RestController
+@RequestMapping("/players")
 public class PlayerController {
     @Autowired
     PlayerService playerService;
 
     @PostMapping("/add")
-    public ResponseEntity<PlayerEntity> addPlayer(@RequestBody PlayerEntity playerEntity) {
-        PlayerEntity player = playerService.addPlayer(playerEntity);
+    public ResponseEntity<PlayerEntity> addPlayer(@RequestBody PlayerEntity playerEntity,
+                                                  @RequestParam Long clubId) {
+        PlayerEntity player = playerService.addPlayer(playerEntity, clubId);
         return new ResponseEntity<>(player, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<PlayerEntity> updatePlayer(@RequestParam Long id,
+                                                     @RequestBody PlayerEntity playerEntity) {
+        PlayerEntity player = playerService.updatePlayer(id, playerEntity);
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -27,9 +35,22 @@ public class PlayerController {
         return new ResponseEntity<>(playerEntityList, HttpStatus.OK);
     }
 
+    @GetMapping("/get/{id}")
+    public ResponseEntity<PlayerEntity> getOneById(@PathVariable Long id) {
+        PlayerEntity player = playerService.findById(id);
+        return new ResponseEntity<>(player, HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteByPlayerId(@PathVariable Long id) {
         playerService.deletePlayerById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<PlayerEntity> transferOperation(@RequestParam Long playerId,
+                                                          @RequestParam Long newClubId) {
+        PlayerEntity player = playerService.transferOperation(playerId, newClubId);
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 }

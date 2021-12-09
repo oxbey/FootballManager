@@ -1,7 +1,11 @@
 package com.oxbey.footballManager.service;
 
-import com.oxbey.footballManager.PlayerNotFoundException;
+import com.oxbey.footballManager.entity.ClubEntity;
 import com.oxbey.footballManager.entity.PlayerEntity;
+import com.oxbey.footballManager.exception.ClubNotFoundException;
+import com.oxbey.footballManager.exception.NotEnoughBudgetException;
+import com.oxbey.footballManager.exception.PlayerNotFoundException;
+import com.oxbey.footballManager.repository.ClubRepository;
 import com.oxbey.footballManager.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,8 @@ public class PlayerService {
 
     @Autowired
     PlayerRepository playerRepository;
+    @Autowired
+    ClubRepository clubRepository;
 
     private Integer transferValue (PlayerEntity playerEntity){
         LocalDate now = LocalDate.now();
@@ -25,13 +31,35 @@ public class PlayerService {
             return (y * 12 + m) * 100000/playerEntity.getAge();
     }
 
-    public PlayerEntity addPlayer (PlayerEntity playerEntity){
-        playerEntity.setTransferPrice(transferValue(playerEntity));
+    public PlayerEntity transferOperation(Long playerId, Long newClubId){
+        PlayerEntity player = findById(playerId);
+        ClubEntity previousClub = player.getClub();
+        ClubEntity newClub = clubRepository.findById(newClubId)
+                .orElseThrow(()-> new ClubNotFoundException("Club with id" + newClubId + " not found"));
+        Integer transferValueWithClubCommission = player.getTransferPrice() * (1 + previousClub.getCommission()/100);
+        if ((newClub.getBudget() - transferValueWithClubCommission) > 0) {
+            previousClub.setBudget(transferValueWithClubCommission + previousClub.getBudget());
+            newClub.setBudget(newClub.getBudget() - transferValueWithClubCommission);
+        } else throw new NotEnoughBudgetException("Transfer value with " + previousClub.getName() +
+                " commission bigger than budget of " + newClub.getName());
+        player.setClub(newClub);
+        return playerRepository.save(player);
+    }
+
+    public PlayerEntity addPlayer (PlayerEntity playerEntity, Long clubId){
+            ClubEntity club = clubRepository.findById(clubId).get();
+            playerEntity.setClub(club);
+            playerEntity.setTransferPrice(transferValue(playerEntity));
         return playerRepository.save(playerEntity);
     }
 
-    public PlayerEntity updatePlayer(PlayerEntity playerEntity){
-        return playerRepository.save(playerEntity);
+    public PlayerEntity updatePlayer(Long id, PlayerEntity playerEntity){
+        PlayerEntity player = playerRepository.findById(id).get();
+        player.setFirstName(playerEntity.getFirstName());
+        player.setLastName(playerEntity.getLastName());
+        player.setAge(playerEntity.getAge());
+        player.setStartCareer(playerEntity.getStartCareer());
+        return playerRepository.save(player);
     }
 
     public List<PlayerEntity> findAllPlayers(){
@@ -43,26 +71,7 @@ public class PlayerService {
                 .orElseThrow(()-> new PlayerNotFoundException("Player with id" + id + " exists"));
     }
 
-    public PlayerEntity findByFirstName(String firstName){
-        return playerRepository.findPlayerEntityByFirstName(firstName)
-                .orElseThrow(()-> new PlayerNotFoundException("Player with first name" + firstName + " exists"));
-    }
-
-    public PlayerEntity findBySecondName(String lastName){
-        return playerRepository.findPlayerEntityByLastName(lastName)
-                .orElseThrow(()-> new PlayerNotFoundException("Player with last name" + lastName + " exists"));
-    }
-
     public void deletePlayerById(Long id){
         playerRepository.deleteById(id);
     }
-
-    public void deletePlayerByFirstName(String firstName){
-        playerRepository.deletePlayerEntityByFirstName(firstName);
-    }
-
-    public void deletePlayerBySecondName(String lastName){
-        playerRepository.deletePlayerEntityByLastName(lastName);
-    }
-
 }
